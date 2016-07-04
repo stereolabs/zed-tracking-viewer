@@ -18,6 +18,7 @@ This sample needs OpenCV, glew, freeglut (given as dependencies under windows)
 * Build the program (Linux)
 
     Open a terminal in With OpenCV directory and execute the following command:
+    
         $ mkdir build
         $ cd build
         $ cmake ..
@@ -26,6 +27,7 @@ This sample needs OpenCV, glew, freeglut (given as dependencies under windows)
 * Build the program (Windows)
 
     Open cmake-gui and select both locations for source (cmakelist folder) and build (create a build folder)
+    
         $ Configure then generate
         $ in the build directory, open the VS project
         $ change the build mode to release.
