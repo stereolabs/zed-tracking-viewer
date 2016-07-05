@@ -9,6 +9,9 @@ endif(COMMAND cmake_policy)
 
 SET(EXECUTABLE_OUTPUT_PATH ".")
 
+SET(CUDA_VERSION "7.5")
+SET(OCV_VERSION "3.1")
+
 IF(WIN32) # Windows
     SET(ZED_INCLUDE_DIRS $ENV{ZED_INCLUDE_DIRS})
     SET(ZED_LIBRARIES $ENV{ZED_LIBRARIES_64})
@@ -23,8 +26,6 @@ IF(WIN32) # Windows
     SET(GLEW_LIBRARY_DIRS $ENV{GLEW_LIBRARY_DIRS})
     SET(GLEW_LIBRARY $ENV{GLEW_LIBRARY})
     SET(EIGEN3_INCLUDE_DIR $ENV{EIGEN_DIR})
-
-    find_package(OpenCV 3.1 REQUIRED)
 ELSE() # Linux
     find_package(ZED 1.0 REQUIRED)
     find_package(GLUT REQUIRED)
@@ -34,17 +35,16 @@ ELSE() # Linux
     ##For Jetson, OpenCV4Tegra is based on OpenCV2.4
     exec_program(uname ARGS -p OUTPUT_VARIABLE CMAKE_SYSTEM_NAME2)
     if ( CMAKE_SYSTEM_NAME2 MATCHES "aarch64" OR CMAKE_SYSTEM_NAME2 MATCHES "armv7l" )
-       find_package(OpenCV 2.4 REQUIRED)
-    else()
-       find_package(OpenCV 3.1 REQUIRED)
+        SET(OCV_VERSION "2.4")
+        SET(CUDA_VERSION "")
     endif()
 
     add_definitions(-Wno-write-strings)
     SET(LINUX_LIBRARIES "pthread")
 ENDIF(WIN32)
 
-# Mandatory
-find_package(CUDA REQUIRED)
+find_package(OpenCV ${OCV_VERSION} REQUIRED)
+find_package(CUDA ${CUDA_VERSION} REQUIRED)
 find_package(OpenGL REQUIRED)
  
 include_directories(${ZED_INCLUDE_DIRS})
