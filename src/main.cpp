@@ -25,6 +25,14 @@
  ** Some of the functions of the ZED SDK are linked with a key press event		          **
  ***************************************************************************************************/
 
+#ifdef __arm__
+#define OCV_DISPLAY 0 // Disable OpenCV display on the jetson by default (which unoptimized)
+#else
+#define OCV_DISPLAY 1
+#endif
+
+#define OGL_VIEWER 1
+
 #include <stdio.h>
 #include <string.h>
 #include <chrono>
@@ -33,17 +41,17 @@
 #include <zed/Camera.hpp>
 #include <zed/utils/GlobalDefine.hpp>
 
+#if OGL_VIEWER
 #include "Viewer.hpp"
 #include "PointCloud.hpp"
+#endif
 
+#if OCV_DISPLAY
 #include <opencv2/opencv.hpp>
+#endif
 
 using namespace sl::zed;
 using namespace std;
-
-#define OCV_DISPLAY 1
-
-//main Loop
 
 int main(int argc, char **argv) {
 
@@ -80,10 +88,11 @@ int main(int argc, char **argv) {
     int width = zed->getImageSize().width;
     int height = zed->getImageSize().height;
 
+#if OGL_VIEWER
     Mat bufferXYZRGBA;
-
     PointCloud cloud(width, height, zed->getCUDAContext());
     Viewer viewer(cloud);
+#endif
 
     sl::zed::TRACKING_STATE track_state;
     Eigen::Matrix4f pose;
@@ -101,16 +110,25 @@ int main(int argc, char **argv) {
     int waitKeyTime = 10;
 #endif
 
+    bool compute_ptcloud = 0;
+
+#if OGL_VIEWER
     while (!viewer.isInitialized());
+    compute_ptcloud = 1;
 
     while (!viewer.isEnded()) {
+#else
+    while (1) {
+#endif
         // Get frames and launch the computation
-        if (!zed->grab(SENSING_MODE::STANDARD, 1, 1, 1)) {
+        if (!zed->grab(SENSING_MODE::STANDARD, 1, 1, compute_ptcloud)) {
+#if OGL_VIEWER
             bufferXYZRGBA = zed->retrieveMeasure_gpu(MEASURE::XYZRGBA);
             if (cloud.mutexData.try_lock()) {
                 cloud.pushNewPC(bufferXYZRGBA);
                 cloud.mutexData.unlock();
             }
+#endif
 
 #if OCV_DISPLAY
             slMat2cvMat(zed->retrieveImage(sl::zed::SIDE::LEFT)).copyTo(h_leftRGBA_fullsize);
@@ -125,7 +143,11 @@ int main(int argc, char **argv) {
 #if OCV_DISPLAY
                     cv::putText(SbS, "Tracking good (" + to_string(zed->getTrackingConfidence()) + ")", cv::Point2d(30, 60), cv::FONT_HERSHEY_PLAIN, 3, cv::Scalar(0, 0, 255), 3);
 #endif
+#if OGL_VIEWER
                     viewer.setPose(pose);
+#else
+                    cout << "\nPose: \n" << pose << endl;
+#endif
                 }
                     break;
                 default:
@@ -147,8 +169,8 @@ int main(int argc, char **argv) {
     };
 
     delete zed;
-
+#if OGL_VIEWER
     viewer.destroy();
-
+#endif
     return 0;
 }
