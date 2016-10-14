@@ -1,23 +1,3 @@
-///////////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) 2015, STEREOLABS.
-//
-// All rights reserved.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-///////////////////////////////////////////////////////////////////////////
-
 // Viewer.hpp
 
 #ifndef __VIEWER_INCLUDE__
@@ -55,7 +35,7 @@ public:
     bool isEnded();
     void setPose(Eigen::Matrix4f& pose);
     void toggleFPSView();
-    bool isInitialized();
+	bool isInitialized();
 private:
     void initialize();
     void render();
@@ -86,18 +66,18 @@ private:
         WHEEL_DOWN = 4
     };
 
-    enum KEY_STATE {
-        UP = 'u',
-        DOWN = 'd',
-        FREE = 'f'
-    };
+	enum KEY_STATE {
+		UP = 'u',
+		DOWN = 'd',
+		FREE = 'f'
+	};
 
     bool mouseButton_[3];
     int mouseWheelPosition_;
     int mouseCurrentPosition_[2];
     int mouseMotion_[2];
     int previousMouseMotion_[2];
-    KEY_STATE keyStates_[256];
+	KEY_STATE keyStates_[256];
 
     Simple3DObject* axis_;
     Simple3DObject* path_;
@@ -112,7 +92,7 @@ private:
     std::mutex cam_mtx;
     bool fps_mode;
 
-    bool initialized_;
+	bool initialized_;
 };
 
-#endif /* __VIEWER_INCLUDE__ */
+#endif	/* __VIEWER_INCLUDE__ */

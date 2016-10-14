@@ -9,8 +9,8 @@ endif(COMMAND cmake_policy)
 
 SET(EXECUTABLE_OUTPUT_PATH ".")
 
-SET(CUDA_VERSION "7.5")
-SET(OCV_VERSION "3.1")
+SET(VERSION_REQ_OCV "3.1")
+SET(VERSION_REQ_CUDA "8.0")
 
 IF(WIN32) # Windows
     SET(ZED_INCLUDE_DIRS $ENV{ZED_INCLUDE_DIRS})
@@ -27,26 +27,28 @@ IF(WIN32) # Windows
     SET(GLEW_LIBRARY $ENV{GLEW_LIBRARY})
     SET(EIGEN3_INCLUDE_DIR $ENV{EIGEN_DIR})
 ELSE() # Linux
-    find_package(ZED 1.0 REQUIRED)
+    find_package(ZED REQUIRED)
     find_package(GLUT REQUIRED)
     find_package(GLEW REQUIRED)
     find_package(Eigen3 REQUIRED)
 
-    ##For Jetson, OpenCV4Tegra is based on OpenCV2.4
-    exec_program(uname ARGS -p OUTPUT_VARIABLE CMAKE_SYSTEM_NAME2)
-    if ( CMAKE_SYSTEM_NAME2 MATCHES "aarch64" OR CMAKE_SYSTEM_NAME2 MATCHES "armv7l" )
-        SET(OCV_VERSION "2.4")
-        SET(CUDA_VERSION "")
-    endif()
+##For Jetson, OpenCV4Tegra is based on OpenCV2.4
+     exec_program(uname ARGS -p OUTPUT_VARIABLE CMAKE_SYSTEM_NAME2)
+     if ( CMAKE_SYSTEM_NAME2 MATCHES "aarch64" OR CMAKE_SYSTEM_NAME2 MATCHES "armv7l" )
+	SET(VERSION_REQ_OCV "2.4")
+	SET(VERSION_REQ_CUDA "")
+link_directories("/usr/lib/aarch64-linux-gnu/tegra") ## on Jetson TX1 64bits, the correct libGL.so is located here (the default one will lead to linking error (undef ref))
+     endif()
 
-    add_definitions(-Wno-write-strings)
-    SET(LINUX_LIBRARIES "pthread")
+    add_definitions(-Wno-write-strings -mavx)
+    SET(LINUX_LIBRARIES "pthread" "X11")
 ENDIF(WIN32)
 
-find_package(OpenCV ${OCV_VERSION} REQUIRED)
-find_package(CUDA ${CUDA_VERSION} REQUIRED)
+# Mandatory
+find_package(OpenCV ${VERSION_REQ_OCV} REQUIRED)
+find_package(CUDA ${VERSION_REQ_CUDA} REQUIRED)
 find_package(OpenGL REQUIRED)
- 
+
 include_directories(${ZED_INCLUDE_DIRS})
 include_directories(${GLEW_INCLUDE_DIRS})
 include_directories(${GLUT_INCLUDE_DIRS})
@@ -78,7 +80,7 @@ TARGET_LINK_LIBRARIES(${execName}
 			${OPENGL_LIBRARIES}
 			${GLUT_LIBRARY}
 			${GLEW_LIBRARY}
-                        ${LINUX_LIBRARIES}
 			${OpenCV_LIBRARIES}
-                        ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY} ${CUDA_npp_LIBRARY}
+      ${LINUX_LIBRARIES}
+			 ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY} ${CUDA_npp_LIBRARY}
  )

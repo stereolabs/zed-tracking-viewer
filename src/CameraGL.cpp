@@ -1,23 +1,3 @@
-///////////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) 2015, STEREOLABS.
-//
-// All rights reserved.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-///////////////////////////////////////////////////////////////////////////
-
 #include "CameraGL.hpp"
 #include <iostream>
 
@@ -90,8 +70,8 @@ void CameraGL::setDirection(const Eigen::Vector3f& direction, const Eigen::Vecto
     Eigen::Vector3f dirNormalized = direction;
     dirNormalized.normalize();
     this->rotation_ = Eigen::Quaternionf::FromTwoVectors(ORIGINAL_FORWARD, -dirNormalized);
-
-    updateVectors();
+	
+	updateVectors();
 
     this->vertical_ = vertical;
     if (vertical_.dot(up_) < 0) {
@@ -108,8 +88,8 @@ void CameraGL::setPosition(const Eigen::Vector3f& p) {
 }
 
 void CameraGL::rotate(const Eigen::Quaternionf& rot) {
-    rotation_ = rot * rotation_;
-    updateVectors();
+	rotation_ = rot * rotation_;
+	updateVectors();
 }
 
 void CameraGL::rotate(const Eigen::Matrix3f& m) {
@@ -118,7 +98,7 @@ void CameraGL::rotate(const Eigen::Matrix3f& m) {
 
 void CameraGL::setRotation(const Eigen::Quaternionf& rot) {
     rotation_ = rot;
-    updateVectors();
+	updateVectors();
 }
 
 void CameraGL::setRotation(const Eigen::Matrix3f& m) {
@@ -154,9 +134,9 @@ float CameraGL::getZFar() const {
 }
 
 void CameraGL::updateVectors() {
-    forward_ = rotation_ * ORIGINAL_FORWARD;
-    up_ = rotation_ * ORIGINAL_UP;
-    right_ = rotation_ * -ORIGINAL_RIGHT;
+	forward_ = rotation_ * ORIGINAL_FORWARD;
+	up_ = rotation_ * ORIGINAL_UP;
+	right_ = rotation_ * -ORIGINAL_RIGHT;
 }
 
 void CameraGL::updateView() {

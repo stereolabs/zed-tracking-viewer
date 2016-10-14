@@ -1,24 +1,3 @@
-///////////////////////////////////////////////////////////////////////////
-//
-// Copyright (c) 2015, STEREOLABS.
-//
-// All rights reserved.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-///////////////////////////////////////////////////////////////////////////
-
-
 #include "PointCloud.hpp"
 
 #include <nppi.h>
@@ -49,8 +28,8 @@ GLchar* POINTCLOUD_FRAGMENT_SHADER =
         "   out_Color = vec4(b_color, 1);\n"
         "}";
 
-PointCloud::PointCloud(unsigned int width, unsigned int height, CUcontext ctx) :
-hasNewPCL_(false), initialized_(false) {
+PointCloud::PointCloud(unsigned int width, unsigned int height,CUcontext ctx) :
+    hasNewPCL_(false), initialized_(false) {
     width_ = width;
     height_ = height;
     zed_cuda_ctx = ctx;
@@ -60,8 +39,9 @@ PointCloud::~PointCloud() {
     close();
 }
 
-void PointCloud::close() {
-    initialized_ = false;
+void PointCloud::close()
+{
+    initialized_=false;
 
     SAFE_DELETE(shader_);
     matGPU_.deallocate();
@@ -124,7 +104,8 @@ void PointCloud::update() {
 }
 
 void PointCloud::draw(const Eigen::Matrix4f& vp) {
-    if (initialized_) {
+    if (initialized_)
+    {
         glUseProgram(shader_->getProgramId());
 
         glUniformMatrix4fv(shMVPMatrixLoc_, 1, GL_FALSE, vp.data());
