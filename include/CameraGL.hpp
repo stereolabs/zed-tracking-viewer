@@ -10,6 +10,7 @@
 
 class CameraGL {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     enum DIRECTION {
         UP, DOWN, LEFT, RIGHT, FORWARD, BACK

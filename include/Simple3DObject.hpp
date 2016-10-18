@@ -11,7 +11,9 @@
 
 class Simple3DObject {
 public:
-	Simple3DObject(Eigen::Vector3f position, bool isStatic);
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    Simple3DObject(Eigen::Vector3f position, bool isStatic);
     ~Simple3DObject();
 
     void addPoint(float x, float y, float z, float r, float g, float b);

@@ -29,6 +29,8 @@
  */
 class Viewer {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     Viewer(PointCloud& pointCloud, bool fps_mode = false);
     ~Viewer();
     void destroy();
