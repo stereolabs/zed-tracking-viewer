@@ -40,7 +40,7 @@ Open a terminal in the sample directory and execute the following command:
 - Navigate to the build directory and launch the executable file
 - Or open a terminal in the build directory and run the sample :
 
-      ./ZED\ Tracking\ Viewer [path to SVO file]
+        ./ZED\ Tracking\ Viewer [path to SVO file]
 
 You can optionally provide an SVO file path (recorded stereo video of the ZED)
 
