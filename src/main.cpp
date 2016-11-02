@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2015, STEREOLABS.
+// Copyright (c) 2016, STEREOLABS.
 //
 // All rights reserved.
 //
@@ -27,31 +27,24 @@
  ** Some of the functions of the ZED SDK are linked with a key press event		          **
  ***************************************************************************************************/
 
-
-//standard Include
 #include <stdio.h>
 #include <string.h>
 #include <chrono>
 
-//ZED Include
 #include <zed/Mat.hpp>
 #include <zed/Camera.hpp>
 #include <zed/utils/GlobalDefine.hpp>
 
-//our point cloud generator and viewer.
+#include <opencv2/opencv.hpp>
+
 #include "Viewer.hpp"
 #include "PointCloud.hpp"
-//#include "CloudViewer.hpp"
-
-#include <opencv2/opencv.hpp>
 
 using namespace sl::zed;
 using namespace std;
 
 #define OCV_DISPLAY 1
 #define FPS_MODE 0
-
-//main Loop
 
 int main(int argc, char **argv) {
 
@@ -64,14 +57,14 @@ int main(int argc, char **argv) {
 
     Camera* zed;
 
-    if (argc == 1) // Use in Live Mode
+    if (argc == 1) // Live Mode
         zed = new Camera(HD720);
-    else // Use in SVO playback mode
+    else // SVO playback mode
         zed = new Camera(argv[1]);
 
     InitParams parameters;
     parameters.mode = MODE::PERFORMANCE;
-    parameters.unit = UNIT::METER; // the openGl part is scaled for processing METERs
+    parameters.unit = UNIT::METER; // Viewer scaled for processing METERs
     parameters.verbose = true;
     parameters.coordinate = COORDINATE_SYSTEM::RIGHT_HANDED | COORDINATE_SYSTEM::APPLY_PATH; // OpenGL works in RIGHT_HAND coordinate system, the path is directly apply to the point cloud
     ERRCODE err = zed->init(parameters);

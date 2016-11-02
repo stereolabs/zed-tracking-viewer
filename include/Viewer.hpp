@@ -1,5 +1,3 @@
-// Viewer.hpp
-
 #ifndef __VIEWER_INCLUDE__
 #define __VIEWER_INCLUDE__
 
@@ -24,9 +22,9 @@
 #define MOUSE_T_SENSITIVITY 0.1f
 #define KEY_T_SENSITIVITY 0.1f
 
-/*
- * This class manages the window, input events and Opengl rendering pipeline
- */
+
+// This class manages the window, input events and Opengl rendering pipeline
+ 
 class Viewer {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -37,7 +35,7 @@ public:
     bool isEnded();
     void setPose(Eigen::Matrix4f& pose);
     void toggleFPSView();
-	bool isInitialized();
+    bool isInitialized();
 private:
     void initialize();
     void render();
@@ -47,7 +45,7 @@ private:
 
     static Viewer* currentInstance_;
 
-    //! OpenGL Functions CALLBACKs
+    // OpenGL functions callbacks
     static void drawCallback();
     static void mouseButtonCallback(int button, int state, int x, int y);
     static void mouseMotionCallback(int x, int y);
@@ -68,18 +66,18 @@ private:
         WHEEL_DOWN = 4
     };
 
-	enum KEY_STATE {
-		UP = 'u',
-		DOWN = 'd',
-		FREE = 'f'
-	};
+    enum KEY_STATE {
+        UP = 'u',
+        DOWN = 'd',
+        FREE = 'f'
+    };
 
     bool mouseButton_[3];
     int mouseWheelPosition_;
     int mouseCurrentPosition_[2];
     int mouseMotion_[2];
     int previousMouseMotion_[2];
-	KEY_STATE keyStates_[256];
+    KEY_STATE keyStates_[256];
 
     Simple3DObject* axis_;
     Simple3DObject* path_;
@@ -94,7 +92,7 @@ private:
     std::mutex cam_mtx;
     bool fps_mode;
 
-	bool initialized_;
+    bool initialized_;
 };
 
-#endif	/* __VIEWER_INCLUDE__ */
+#endif

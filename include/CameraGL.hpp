@@ -1,5 +1,3 @@
-// CameraGL.hpp
-
 #ifndef __CAMERAGL_INCLUDE__
 #define __CAMERAGL_INCLUDE__
 
@@ -10,6 +8,7 @@
 
 class CameraGL {
 public:
+
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     enum DIRECTION {
@@ -56,7 +55,7 @@ public:
 
     Eigen::Matrix4f projection_;
 private:
-	void updateVectors();
+    void updateVectors();
     void updateView();
     void updateVPMatrix();
 
@@ -78,4 +77,4 @@ private:
     float zfar_;
 };
 
-#endif	/* __VIEWER_INCLUDE__ */
+#endif

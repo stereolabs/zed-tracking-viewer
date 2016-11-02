@@ -1,8 +1,5 @@
 #include "Viewer.hpp"
 
-
-
-
 GLchar* VERTEX_SHADER =
         "#version 330 core\n"
         "layout(location = 0) in vec3 in_Vertex;\n"
@@ -46,9 +43,9 @@ Viewer::~Viewer() {
 
 void Viewer::destroy() {
     SAFE_DELETE(shader_);
-    SAFE_DELETE( camera_);
-    SAFE_DELETE( path_);
-    SAFE_DELETE( axis_);
+    SAFE_DELETE(camera_);
+    SAFE_DELETE(path_);
+    SAFE_DELETE(axis_);
     glutDestroyWindow(0);
 
     currentInstance_ = nullptr;
@@ -64,14 +61,14 @@ void Viewer::setPose(Eigen::Matrix4f& pose) {
     this->previous_path = this->path;
     this->path = this->previous_path * this->pose;
     new_path = true;
-	
-	path_->addPoint(previous_path(0, 3), previous_path(1, 3), previous_path(2, 3), 0, 0.674, 0.925);
-	path_->addPoint(path(0, 3), path(1, 3), path(2, 3), 0, 0.674, 0.925);
 
-	if (fps_mode) {
-		camera_->translate(pose.block<3, 1>(0, 3));
-		camera_->rotate(pose.block<3, 3>(0, 0));
-	}
+    path_->addPoint(previous_path(0, 3), previous_path(1, 3), previous_path(2, 3), 0, 0.674, 0.925);
+    path_->addPoint(path(0, 3), path(1, 3), path(2, 3), 0, 0.674, 0.925);
+
+    if (fps_mode) {
+        camera_->translate(pose.block<3, 1>(0, 3));
+        camera_->rotate(pose.block<3, 3>(0, 0));
+    }
     cam_mtx.unlock();
 }
 
@@ -114,7 +111,7 @@ void Viewer::initialize() {
     // Create 3D axis
     Eigen::Matrix4f path_id;
     path_id.setIdentity();
-	axis_ = new Simple3DObject(path_id.block<3, 1>(0, 3), true);
+    axis_ = new Simple3DObject(path_id.block<3, 1>(0, 3), true);
     float vertices[18] = {
         0, 0, 0,
         0, 0, 1,
@@ -137,16 +134,16 @@ void Viewer::initialize() {
     axis_->setDrawingType(GL_LINES);
     axis_->pushToGPU();
 
-	path_ = new Simple3DObject(path_id.block<3, 1>(0, 3), 0);
+    path_ = new Simple3DObject(path_id.block<3, 1>(0, 3), 0);
     path_->setDrawingType(GL_LINES);
 
-	frustum_ = new Simple3DObject(path_id.block<3, 1>(0, 3), 1);
+    frustum_ = new Simple3DObject(path_id.block<3, 1>(0, 3), 1);
     frustum_->setDrawingType(GL_LINES);
 
     float size_w = 0.04;
     float size_h = 0.022;
     float p_ = -0.075;
-	float r = 0.172;
+    float r = 0.172;
     float g = 0.243;
     float b = 0.313;
     Eigen::Vector3f cam_0, cam_1, cam_2, cam_3, cam_4;
@@ -191,7 +188,7 @@ void Viewer::initialize() {
     glutKeyboardUpFunc(Viewer::keyReleasedCallback);
     glutIdleFunc(Viewer::idle);
 
-	initialized_ = true;
+    initialized_ = true;
 
     glutMainLoop();
 }
@@ -203,10 +200,9 @@ void Viewer::render() {
         glClearColor(1, 1, 1, 1.0f);
         glLineWidth(2);
         glPointSize(2);
-        if (!ended_)
-        {
-        update();
-        draw();
+        if (!ended_) {
+            update();
+            draw();
         }
         glutSwapBuffers();
     }
@@ -217,11 +213,11 @@ void Viewer::toggleFPSView() {
 }
 
 bool Viewer::isInitialized() {
-	return initialized_;
+    return initialized_;
 }
 
 void Viewer::update() {
-	if (keyStates_['q'] == KEY_STATE::UP) {
+    if (keyStates_['q'] == KEY_STATE::UP) {
         pointCloud_.close();
         ended_ = true;
 
@@ -230,10 +226,10 @@ void Viewer::update() {
 
     if (new_path) {
         cam_mtx.lock();
-        
+
         new_path = false;
 
-		path_->pushToGPU();
+        path_->pushToGPU();
 
         frustum_->setRT(path);
         frustum_->pushToGPU();
@@ -264,21 +260,21 @@ void Viewer::update() {
     }
 
     // Translation of the camera on its axis
-	if (keyStates_['u'] == KEY_STATE::DOWN) {
+    if (keyStates_['u'] == KEY_STATE::DOWN) {
         camera_->translate(-camera_->getForward() * KEY_T_SENSITIVITY);
     }
-	if (keyStates_['j'] == KEY_STATE::DOWN) {
+    if (keyStates_['j'] == KEY_STATE::DOWN) {
         camera_->translate(camera_->getForward() * KEY_T_SENSITIVITY);
     }
-	if (keyStates_['h'] == KEY_STATE::DOWN) {
+    if (keyStates_['h'] == KEY_STATE::DOWN) {
         camera_->translate(camera_->getRight() * KEY_T_SENSITIVITY);
     }
-	if (keyStates_['k'] == KEY_STATE::DOWN) {
+    if (keyStates_['k'] == KEY_STATE::DOWN) {
         camera_->translate(-camera_->getRight() * KEY_T_SENSITIVITY);
-	}
-	if (keyStates_['f'] == KEY_STATE::UP) {
-		currentInstance_->toggleFPSView();
-	}
+    }
+    if (keyStates_['f'] == KEY_STATE::UP) {
+        currentInstance_->toggleFPSView();
+    }
 
     // Update Point Cloud buffers
     pointCloud_.mutexData.lock();
@@ -313,9 +309,9 @@ void Viewer::draw() {
 void Viewer::clearInputs() {
     mouseMotion_[0] = mouseMotion_[1] = 0;
     mouseWheelPosition_ = 0;
-	for (unsigned int i = 0; i < 256; ++i)
-		if (keyStates_[i] != KEY_STATE::DOWN)
-			keyStates_[i] = KEY_STATE::FREE;
+    for (unsigned int i = 0; i < 256; ++i)
+        if (keyStates_[i] != KEY_STATE::DOWN)
+            keyStates_[i] = KEY_STATE::FREE;
 }
 
 void Viewer::drawCallback() {
@@ -356,7 +352,7 @@ void Viewer::keyPressedCallback(unsigned char c, int x, int y) {
 }
 
 void Viewer::keyReleasedCallback(unsigned char c, int x, int y) {
-	currentInstance_->keyStates_[c] = KEY_STATE::UP;
+    currentInstance_->keyStates_[c] = KEY_STATE::UP;
 }
 
 void Viewer::idle() {

@@ -70,8 +70,8 @@ void CameraGL::setDirection(const Eigen::Vector3f& direction, const Eigen::Vecto
     Eigen::Vector3f dirNormalized = direction;
     dirNormalized.normalize();
     this->rotation_ = Eigen::Quaternionf::FromTwoVectors(ORIGINAL_FORWARD, -dirNormalized);
-	
-	updateVectors();
+
+    updateVectors();
 
     this->vertical_ = vertical;
     if (vertical_.dot(up_) < 0) {
@@ -88,8 +88,8 @@ void CameraGL::setPosition(const Eigen::Vector3f& p) {
 }
 
 void CameraGL::rotate(const Eigen::Quaternionf& rot) {
-	rotation_ = rot * rotation_;
-	updateVectors();
+    rotation_ = rot * rotation_;
+    updateVectors();
 }
 
 void CameraGL::rotate(const Eigen::Matrix3f& m) {
@@ -98,7 +98,7 @@ void CameraGL::rotate(const Eigen::Matrix3f& m) {
 
 void CameraGL::setRotation(const Eigen::Quaternionf& rot) {
     rotation_ = rot;
-	updateVectors();
+    updateVectors();
 }
 
 void CameraGL::setRotation(const Eigen::Matrix3f& m) {
@@ -134,9 +134,9 @@ float CameraGL::getZFar() const {
 }
 
 void CameraGL::updateVectors() {
-	forward_ = rotation_ * ORIGINAL_FORWARD;
-	up_ = rotation_ * ORIGINAL_UP;
-	right_ = rotation_ * -ORIGINAL_RIGHT;
+    forward_ = rotation_ * ORIGINAL_FORWARD;
+    up_ = rotation_ * ORIGINAL_UP;
+    right_ = rotation_ * -ORIGINAL_RIGHT;
 }
 
 void CameraGL::updateView() {

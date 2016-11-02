@@ -8,4 +8,4 @@
 #define M_PI 3.141592653
 #endif
 
-#endif /*__UTILS_HPP__*/
+#endif

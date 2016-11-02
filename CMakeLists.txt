@@ -81,6 +81,6 @@ TARGET_LINK_LIBRARIES(${execName}
 			${GLUT_LIBRARY}
 			${GLEW_LIBRARY}
 			${OpenCV_LIBRARIES}
-      ${LINUX_LIBRARIES}
-			 ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY} ${CUDA_npp_LIBRARY}
+                        ${LINUX_LIBRARIES}
+                        ${CUDA_CUDA_LIBRARY} ${CUDA_CUDART_LIBRARY} ${CUDA_npp_LIBRARY}
  )

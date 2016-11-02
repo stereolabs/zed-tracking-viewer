@@ -1,5 +1,3 @@
-// Simple3DObject.hpp
-
 #ifndef __SIMPLE3DOBJECT_INCLUDE__
 #define __SIMPLE3DOBJECT_INCLUDE__
 
@@ -27,14 +25,14 @@ public:
     void translate(const Eigen::Vector3f& t);
     void setPosition(const Eigen::Vector3f& p);
 
-	void setRT(const Eigen::Matrix4f& mRT);
+    void setRT(const Eigen::Matrix4f& mRT);
 
-	void rotate(const Eigen::Quaternionf& rot);
-	void rotate(const Eigen::Matrix3f& m);
-	void setRotation(const Eigen::Quaternionf& rot);
-	void setRotation(const Eigen::Matrix3f& m);
-	
-	const Eigen::Vector3f& getPosition() const;
+    void rotate(const Eigen::Quaternionf& rot);
+    void rotate(const Eigen::Matrix3f& m);
+    void setRotation(const Eigen::Quaternionf& rot);
+    void setRotation(const Eigen::Matrix3f& m);
+
+    const Eigen::Vector3f& getPosition() const;
 
     Eigen::Matrix4f getModelMatrix() const;
 private:
@@ -55,9 +53,9 @@ private:
      */
     GLuint vboID_[3];
 
-	Eigen::Vector3f position_;
-	Eigen::Quaternionf rotation_;
+    Eigen::Vector3f position_;
+    Eigen::Quaternionf rotation_;
 
 };
 
-#endif	/* __SIMPLE3DOBJECT_INCLUDE__ */
+#endif

@@ -1,5 +1,4 @@
 #include "PointCloud.hpp"
-
 #include <nppi.h>
 
 GLchar* POINTCLOUD_VERTEX_SHADER =
@@ -28,8 +27,8 @@ GLchar* POINTCLOUD_FRAGMENT_SHADER =
         "   out_Color = vec4(b_color, 1);\n"
         "}";
 
-PointCloud::PointCloud(unsigned int width, unsigned int height,CUcontext ctx) :
-    hasNewPCL_(false), initialized_(false) {
+PointCloud::PointCloud(unsigned int width, unsigned int height, CUcontext ctx) :
+hasNewPCL_(false), initialized_(false) {
     width_ = width;
     height_ = height;
     zed_cuda_ctx = ctx;
@@ -39,9 +38,8 @@ PointCloud::~PointCloud() {
     close();
 }
 
-void PointCloud::close()
-{
-    initialized_=false;
+void PointCloud::close() {
+    initialized_ = false;
 
     SAFE_DELETE(shader_);
     matGPU_.deallocate();
@@ -104,8 +102,7 @@ void PointCloud::update() {
 }
 
 void PointCloud::draw(const Eigen::Matrix4f& vp) {
-    if (initialized_)
-    {
+    if (initialized_) {
         glUseProgram(shader_->getProgramId());
 
         glUniformMatrix4fv(shMVPMatrixLoc_, 1, GL_FALSE, vp.data());

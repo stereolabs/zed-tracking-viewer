@@ -1,6 +1,7 @@
-// PointCloud.hpp
 #ifndef __POINT_CLOUD_INCLUDE__
 #define __POINT_CLOUD_INCLUDE__
+
+#include <mutex>
 
 #include <zed/utils/GlobalDefine.hpp>
 #include <zed/Mat.hpp>
@@ -14,10 +15,8 @@
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 
-#include <mutex>
 
 #include "Shader.hpp"
-
 
 #define SAFE_DELETE( res ) if( res!=NULL )  \
                                 {                \
@@ -55,4 +54,4 @@ private:
     GLuint bufferGLID_;
     cudaGraphicsResource* bufferCudaID_;
 };
-#endif /* __POINT_CLOUD_INCLUDE__ */
+#endif
