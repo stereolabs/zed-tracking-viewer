@@ -19,16 +19,18 @@ Download the sample and follow these instructions:
 
 #### Build for Windows
 
-- Create a "build" folder in the source folder
+- Create a folder called "build" in the source folder
 - Open cmake-gui and select the source and build folders
 - Generate the Visual Studio `Win64` solution
-- Open the resulting solution and change configuration to `Release`
+- Open the resulting solution and change the solution configuration to `Release`
 - Build solution
 
 #### Build for Linux
 
-Open a terminal in the sample directory and execute the following command:
+Open a terminal and run the following command to clone and build the sample:
 
+    git clone https://github.com/stereolabs/zed-tracking-viewer.git
+    cd zed-tracking-viewer
     mkdir build
     cd build
     cmake ..
@@ -40,7 +42,7 @@ Open a terminal in the sample directory and execute the following command:
 - Navigate to the build directory and launch the executable file
 - Or open a terminal in the build directory and run the sample :
 
-        ./ZED\ Tracking\ Viewer [path to SVO file]
+      ./ZED\ Tracking\ Viewer [path to SVO file]
 
 You can optionally provide an SVO file path (recorded stereo video of the ZED)
 
@@ -51,6 +53,8 @@ This sample shows how to capture and display the current scene depth and 3D came
 - Left image and depth map are captured and displayed
 - Depth is displayed as a 3D point cloud
 - 3D camera tracking is displayed as a continuous 3D path
+
+![Tracking viewer](track.gif)
 
 *NOTE:* Camera tracking is based on 3D vision only. Quick and sudden camera movements can be difficult to track if the image is blurry or there is no visual information in the scene. To improve tracking performance, we recommend using the ZED in HD720 mode at 60fps.
 

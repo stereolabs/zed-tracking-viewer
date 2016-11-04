@@ -11,7 +11,7 @@ public:
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    enum DIRECTION {
+        enum DIRECTION {
         UP, DOWN, LEFT, RIGHT, FORWARD, BACK
     };
 
@@ -26,7 +26,7 @@ public:
     float getVerticalFOV() const;
 
     /*
-            Set an offset between the eye of the camera and its position. 
+            Set an offset between the eye of the camera and its position.
             Note: Useful to use the camera as a trackball camera with z>0 and x = 0, y = 0.
             Note: coordinates are in local space.
      */

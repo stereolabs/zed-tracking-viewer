@@ -10,7 +10,8 @@
 #include <Eigen/Core>
 #include <Eigen/Eigen>
 
-#include "utils.hpp"
+#include <GL/freeglut.h>
+
 #include "Shader.hpp"
 #include "CameraGL.hpp"
 #include "Simple3DObject.hpp"
@@ -24,23 +25,23 @@
 
 
 // This class manages the window, input events and Opengl rendering pipeline
- 
+
 class Viewer {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    Viewer(PointCloud& pointCloud, bool fps_mode = false);
+        Viewer(PointCloud& pointCloud, int argc, char **argv);
     ~Viewer();
     void destroy();
     bool isEnded();
-    void setPose(Eigen::Matrix4f& pose);
-    void toggleFPSView();
+    void setPose(Eigen::Matrix4f& pose, sl::zed::TRACKING_STATE trackingState, int trackingError);
     bool isInitialized();
 private:
     void initialize();
     void render();
     void update();
     void draw();
+    void printText();
     void clearInputs();
 
     static Viewer* currentInstance_;
@@ -52,7 +53,7 @@ private:
     static void reshapeCallback(int width, int height);
     static void keyPressedCallback(unsigned char c, int x, int y);
     static void keyReleasedCallback(unsigned char c, int x, int y);
-    static void idle();
+    static void idleCallback();
 
     std::thread* mainLoopThread_;
 
@@ -79,7 +80,10 @@ private:
     int previousMouseMotion_[2];
     KEY_STATE keyStates_[256];
 
-    Simple3DObject* axis_;
+    Simple3DObject* axis_X;
+    Simple3DObject* axis_Y;
+    Simple3DObject* axis_Z;
+
     Simple3DObject* path_;
     Simple3DObject* frustum_;
     PointCloud& pointCloud_;
@@ -87,11 +91,18 @@ private:
     Shader* shader_;
     GLuint shMVPMatrixLoc_;
 
+    float cr;
+    float cg;
+    float cb;
+    int wnd_w;
+    int wnd_h;
+    sl::zed::TRACKING_STATE trackState;
+    int trackError;
     bool new_path;
     Eigen::Matrix4f path, previous_path, pose;
     std::mutex cam_mtx;
-    bool fps_mode;
-
+    int _argc;
+    char **_argv;
     bool initialized_;
 };
 

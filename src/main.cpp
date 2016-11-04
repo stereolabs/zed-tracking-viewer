@@ -44,23 +44,33 @@ using namespace sl::zed;
 using namespace std;
 
 #define OCV_DISPLAY 1
-#define FPS_MODE 0
 
 int main(int argc, char **argv) {
 
-    std::string reloc_db_path = "";
-
-    if (argc > 2) {
-        std::cout << "Only the path of a SVO can be passed in arg" << std::endl;
+    if (argc > 3) {
+        std::cout << "Only the path of a SVO or a zedrelocDB file can be passed in arg." << std::endl;
         return -1;
     }
 
-    Camera* zed;
+    // quick check of arguments
+    bool readSVO = false;
+    std::string SVOName;
+    std::string reloc_db_path = "";
+    if (argc > 1) {
+        std::string _arg;
+        for (int i = 1; i < argc; i++) {
+            _arg = argv[i];
+            if (_arg.find(".svo") != std::string::npos) { // if a SVO is given we save its name
+                readSVO = true;
+                SVOName = _arg;
+            }
+            if (_arg.find(".zedrelocDB") != std::string::npos) { // if a parameters file is given we save its name
+                reloc_db_path = _arg;
+            }
+        }
+    }
 
-    if (argc == 1) // Live Mode
-        zed = new Camera(HD720);
-    else // SVO playback mode
-        zed = new Camera(argv[1]);
+    Camera* zed = readSVO ? new Camera(SVOName) : new Camera(HD720);
 
     InitParams parameters;
     parameters.mode = MODE::PERFORMANCE;
@@ -84,7 +94,7 @@ int main(int argc, char **argv) {
     Mat bufferXYZRGBA;
 
     PointCloud cloud(width, height, zed->getCUDAContext());
-    Viewer viewer(cloud, FPS_MODE);
+    Viewer * viewer = new Viewer(cloud, argc, argv);
 
     sl::zed::TRACKING_STATE track_state;
     Eigen::Matrix4f pose;
@@ -95,16 +105,16 @@ int main(int argc, char **argv) {
     // OpenCV display init
 #if OCV_DISPLAY
     cv::Mat SbS(height * 2, width, CV_8UC4);
-    cv::Mat h_leftRGBA_fullsize(SbS, cv::Rect(0, 0, width, height));
-    cv::Mat displayDepth(SbS, cv::Rect(0, height, width, height));
+    cv::Mat leftRGBA_fullsize(SbS, cv::Rect(0, 0, width, height));
+    cv::Mat normDepth_fullsize(SbS, cv::Rect(0, height, width, height));
     cv::Size displaySize(720, 404 * 2);
     cv::Mat SbS_display(displaySize.height, displaySize.width, CV_8UC4);
     int waitKeyTime = 10;
 #endif
 
-    while (!viewer.isInitialized());
+    while (!viewer->isInitialized());
 
-    while (!viewer.isEnded()) {
+    while (!viewer->isEnded()) {
         // Get frames and launch the computation
         if (!zed->grab(SENSING_MODE::STANDARD, 1, 1, 1)) {
             bufferXYZRGBA = zed->retrieveMeasure_gpu(MEASURE::XYZRGBA);
@@ -113,30 +123,12 @@ int main(int argc, char **argv) {
                 cloud.mutexData.unlock();
             }
 
-#if OCV_DISPLAY
-            slMat2cvMat(zed->retrieveImage(sl::zed::SIDE::LEFT)).copyTo(h_leftRGBA_fullsize);
-            slMat2cvMat(zed->normalizeMeasure(sl::zed::MEASURE::DISPARITY, -40, -5)).copyTo(displayDepth);
-#endif
-
             track_state = zed->getPosition(pose, MAT_TRACKING_TYPE::POSE);
-
-            switch (track_state) {
-                case TRACKING_GOOD:
-                {
-#if OCV_DISPLAY
-                    cv::putText(SbS, "Tracking good (" + to_string(zed->getTrackingConfidence()) + ")", cv::Point2d(30, 60), cv::FONT_HERSHEY_PLAIN, 3, cv::Scalar(0, 0, 255), 3);
-#endif
-                    viewer.setPose(pose);
-                }
-                    break;
-                default:
-#if OCV_DISPLAY
-                    cv::putText(SbS, tracking_state2str(track_state), cv::Point2d(30, 60), cv::FONT_HERSHEY_PLAIN, 3, cv::Scalar(0, 0, 255), 3);
-#endif
-                    break;
-            }
+            viewer->setPose(pose, track_state, zed->getTrackingConfidence());
 
 #if OCV_DISPLAY
+            slMat2cvMat(zed->retrieveImage(sl::zed::SIDE::LEFT)).copyTo(leftRGBA_fullsize);
+            slMat2cvMat(zed->normalizeMeasure(sl::zed::MEASURE::DEPTH, 1., 5.)).copyTo(normDepth_fullsize);
             cv::resize(SbS, SbS_display, displaySize);
             cv::imshow("ZED Images", SbS_display);
 #endif
@@ -148,8 +140,7 @@ int main(int argc, char **argv) {
     };
 
     delete zed;
-
-    viewer.destroy();
+    delete viewer;
 
     return 0;
 }
