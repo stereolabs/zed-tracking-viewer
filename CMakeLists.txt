@@ -37,10 +37,12 @@ ELSE() # Linux
      if ( CMAKE_SYSTEM_NAME2 MATCHES "aarch64" OR CMAKE_SYSTEM_NAME2 MATCHES "armv7l" )
 	SET(VERSION_REQ_OCV "2.4")
 	SET(VERSION_REQ_CUDA "")
-link_directories("/usr/lib/aarch64-linux-gnu/tegra") ## on Jetson TX1 64bits, the correct libGL.so is located here (the default one will lead to linking error (undef ref))
+	link_directories("/usr/lib/aarch64-linux-gnu/tegra") ## on Jetson TX1 64bits, the correct libGL.so is located here (the default one will lead to linking error (undef ref))
+     else()
+         add_definitions(-mavx)
      endif()
 
-    add_definitions(-Wno-write-strings -mavx)
+    add_definitions(-Wno-write-strings)
     SET(LINUX_LIBRARIES "pthread" "X11")
 ENDIF(WIN32)
 
