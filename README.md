@@ -1,3 +1,5 @@
+### This sample is deprecated and no longer maintained for the ZED SDK >= 2.X, please use [this one instead](https://github.com/stereolabs/zed-examples/tree/master/positional%20tracking)
+
 # Stereolabs ZED - Positional Tracking
 
 This sample shows how to track the motion of the camera in 3D space with six degrees of freedom (6DoF). The code included in this example captures and displays a live point cloud of the scene along with 3D camera path.
